@@ -8,13 +8,30 @@ It is also possible to configure certain controller features and use its haptic 
 
 Get the source and build it. The project can be built with CMake, but I guess you could just compile the .c file into a library.
 
+First you need to enumerate all available devices and iterate over them. Use `SteamController_Open` to get a device handle:
+
+    SteamControllerDeviceEnum *pEnum = SteamController_EnumControllerDevices();
+    while (pEnum) {
+    	SteamControllerDevice *pDevice = SteamController_Open(pEnum);
+
+    	// ... store pDevice for later use ...
+
+    	pEnum = SteamController_NextControllerDevice(pEnum);
+    }
+
+After that you can use `SteamController_Configure` with the desired flags to set up the controller. Then you use `SteamController_ReadEvent` to receive updates about connection status, button, axis and vector values and battery voltage. 
+
+Use `SteamController_UpdateState` to accumulate events into a controller state.
+
+See `example.c` for a very crude, very rudimentary example.
+
 ### Pitfalls
 
 - You will need access to the hidraw devices. That means you will either have to change permissions on them or run as root. This dark udev magic should do the trick:
 
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1042", GROUP="plugdev", MODE="0660"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1102", GROUP="plugdev", MODE="0660"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1142", GROUP="plugdev", MODE="0660"
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1042", GROUP="plugdev", MODE="0660"
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1102", GROUP="plugdev", MODE="0660"
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1142", GROUP="plugdev", MODE="0660"
 
     You need to be member of the specified group of course.
 
@@ -28,15 +45,18 @@ Get the source and build it. The project can be built with CMake, but I guess yo
 
 (In no particular order)
 
-- Figure out how to access the device without running as root or changing permissions. Steam games are able to do it too.
-- Figure out how HID works under Windows and create a port for that as well.
-- Research multiple controllers per dongle.
+- Figure out how to access the device without running as root or changing permissions. Steam games are able to do it too. (The USB device itself appears to be world read/writable. Maybe talking HID protocols to it directly as a last resort.)
+- ~~Figure out how HID works under Windows and create a port for that as well.~~
+  Turned out to be easier than under Linux and no permission tricks needed either. Nice!
+- ~~Research multiple controllers per dongle.~~
+  The dongle reports four separate HID devices to the system. Each is a slot for a potential connection to a controller. This means one only has to worry about one controller per device.
 - Figure out scale and units for angular velocity.
 - Understand pairing better, especially the meaning of `0x3c`.
 - Add some example code for using the controller.
 - Figure out the unknown feature ids.
 - Confirm that the orientation vector is indeed part of a quaternion.
-- Maybe completing the bootloader stuff. 
+- ~~Maybe completing the bootloader stuff.~~
+  No! Not worth it. It could potentially brick people's controllers permanently and void their warranties. 
 - Documentation.
 
 ## License
