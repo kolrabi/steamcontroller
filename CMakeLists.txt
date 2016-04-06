@@ -5,6 +5,12 @@ ENDIF                   ( )
 CMAKE_MINIMUM_REQUIRED  ( VERSION 2.6 )
 PROJECT                 ( LibSteamController C )
 
+IF                      ( CMAKE_COMPILER_IS_GNUCC )
+  SET                   ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror" )
+ELSEIF                  ( MSVC )
+  SET                   ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4 /WX" )
+ENDIF                   ( )
+
 OPTION                  ( BUILD_STATIC_LIB       "Build static library"         FALSE )
 
 SET                     ( SOURCES
@@ -23,7 +29,7 @@ ELSE                    ( )
   ADD_LIBRARY           ( SteamController SHARED ${SOURCES} )
 
   SET_TARGET_PROPERTIES ( SteamController  PROPERTIES
-                          VERSION     "0.1.0"
+                          VERSION     "0.1.1"
                           SOVERSION   "0.1" )
 ENDIF                   ( )
 

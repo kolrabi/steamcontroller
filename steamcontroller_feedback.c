@@ -16,14 +16,13 @@ bool SCAPI SteamController_TriggerHaptic(const SteamControllerDevice *pDevice, u
   memset(&featureReport, 0, sizeof(featureReport));
   featureReport.featureId   = STEAMCONTROLLER_TRIGGER_HAPTIC_PULSE;
   featureReport.dataLen     = motor > 0xff ? 8 : 7;
-  featureReport.data[0]     = motor & 0xff;
-  featureReport.data[1]     = onTime & 0xff;
-  featureReport.data[2]     = (onTime >> 8) & 0xff;
-  featureReport.data[3]     = offTime & 0xff;
-  featureReport.data[4]     = (offTime >> 8) & 0xff;
-  featureReport.data[5]     = count;
-  featureReport.data[6]     = count >> 8;
-  featureReport.data[7]     = motor >> 8;
+  featureReport.data[0]     = LowByte(motor);
+  StoreU16(featureReport.data + 1, onTime);
+  StoreU16(featureReport.data + 3, offTime);
+  StoreU16(featureReport.data + 5, count);
+
+  if (featureReport.dataLen > 7)
+    featureReport.data[7]     = HighByte(motor);
 
   return SteamController_HIDSetFeatureReport(pDevice, &featureReport);
 }
@@ -37,10 +36,7 @@ void SCAPI SteamController_PlayMelody(const SteamControllerDevice *pDevice, uint
   memset(&featureReport, 0, sizeof(featureReport));
   featureReport.featureId   = STEAMCONTROLLER_PLAY_MELODY;
   featureReport.dataLen     = 0x04;
-  featureReport.data[0] = melodyId;
-  featureReport.data[1] = melodyId >> 8;
-  featureReport.data[2] = melodyId >> 16;
-  featureReport.data[3] = melodyId >> 24;
+  StoreU32(featureReport.data, melodyId);
 
   SteamController_HIDSetFeatureReport(pDevice, &featureReport);
 }

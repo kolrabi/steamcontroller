@@ -16,8 +16,8 @@ uint8_t SCAPI SteamController_ReadEvent(const SteamControllerDevice *pDevice, St
   if (!pEvent)
     return 0;
 
-  uint8_t eventDataBuf[65];
-  uint16_t len = SteamController_ReadRaw(pDevice, eventDataBuf, 65);
+  uint8_t   eventDataBuf[65];
+  uint16_t  len = SteamController_ReadRaw(pDevice, eventDataBuf, 65);
 
   if (!len)
     return 0;
@@ -112,7 +112,6 @@ uint8_t SCAPI SteamController_ReadEvent(const SteamControllerDevice *pDevice, St
     default:
       fprintf(stderr, "Received unknown event type %02x:\n", eventType);
       Debug_DumpHex(eventData, len);
-
       return 0;
   }
   return eventType;

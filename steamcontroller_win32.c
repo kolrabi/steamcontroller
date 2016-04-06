@@ -45,7 +45,7 @@ SCAPI SteamControllerDeviceEnum * SteamController_EnumControllerDevices() {
     pDevIntfDetailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 
     if (!SetupDiGetDeviceInterfaceDetail(devInfo, &devIntfData, pDevIntfDetailData, reqSize, &reqSize, NULL)) {
-      fprintf(stderr, "SetupDiGetDeviceInterfaceDetail failed. Last error: %08x\n", GetLastError());
+      fprintf(stderr, "SetupDiGetDeviceInterfaceDetail failed. Last error: %08lx\n", GetLastError());
       free(pDevIntfDetailData);
       continue;
     }
@@ -148,7 +148,7 @@ bool SteamController_HIDSetFeatureReport(const SteamControllerDevice *pDevice, S
     if (ok)
       return true;
 
-    fprintf(stderr, "HidD_SetFeature failed. Last error: %08x\n", GetLastError());
+    fprintf(stderr, "HidD_SetFeature failed. Last error: %08lx\n", GetLastError());
     Sleep(1);
   }
 
@@ -166,14 +166,14 @@ bool SteamController_HIDGetFeatureReport(const SteamControllerDevice *pDevice, S
   fprintf(stderr, "SteamController_HIDGetFeatureReport %02x\n", pReport->featureId);
 
   for (int i=0; i<50; i++) {
-    bool ok = HidD_GetFeature(pDevice->devHandle, pReport, 65); //sizeof(SteamController_HIDFeatureReport));
+    bool ok = HidD_GetFeature(pDevice->devHandle, pReport, sizeof(SteamController_HIDFeatureReport));
     if (ok) {
       if (featureId == pReport->featureId)
         return true;
       continue;
     }
 
-    fprintf(stderr, "HidD_SetFeature failed. Last error: %08x\n", GetLastError());
+    fprintf(stderr, "HidD_SetFeature failed. Last error: %08lx\n", GetLastError());
     Sleep(1);
   }
 
@@ -190,11 +190,9 @@ uint8_t SteamController_ReadRaw(const SteamControllerDevice *pDevice, uint8_t *b
   if (!pDevice)
     return 0;
 
-  bool ok;
   DWORD bytesRead = 0;
-
-  ok = ReadFile(pDevice->devHandle, buffer, maxLen, &bytesRead, (OVERLAPPED*)&pDevice->overlapped);
-  ok = WaitForSingleObject(pDevice->reportEvent, 0);
+  ReadFile(pDevice->devHandle, buffer, maxLen, &bytesRead, (OVERLAPPED*)&pDevice->overlapped);
+  WaitForSingleObject(pDevice->reportEvent, 0);
 
   return bytesRead & 0xff;
 }

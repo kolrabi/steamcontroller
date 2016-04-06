@@ -9,7 +9,7 @@ int main() {
     SteamControllerDevice *pDevice = SteamController_Open(pEnum);
     if (pDevice) {  
        
-      while(true) {
+      for(;;) {
         uint8_t res = SteamController_ReadEvent(pDevice, &event);
         if (res == STEAMCONTROLLER_EVENT_CONNECTION && event.connection.details == STEAMCONTROLLER_CONNECTION_EVENT_DISCONNECTED) {
           fprintf(stderr, "Device %p is not connected (anymore), trying next one...\n", pDevice);

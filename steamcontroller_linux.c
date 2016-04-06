@@ -1,3 +1,7 @@
+#if _MSC_VER
+#pragma warning(disable: 4206)  // MSC: nonstandard extension used : translation unit is empty
+#endif
+
 #if __linux__
 
 #include "steamcontroller.h"
@@ -269,4 +273,5 @@ uint8_t SteamController_ReadRaw(const SteamControllerDevice *pDevice, uint8_t *b
 
   return res;
 }
+
 #endif

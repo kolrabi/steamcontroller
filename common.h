@@ -48,3 +48,19 @@ bool SteamController_HIDGetFeatureReport(const SteamControllerDevice *pDevice, S
 
 bool    SteamController_Initialize(const SteamControllerDevice *pDevice);
 uint8_t SteamController_ReadRaw(const SteamControllerDevice *pDevice, uint8_t *buffer, uint8_t maxLen);
+
+
+static inline uint8_t LowByte(uint16_t value)   { return value & 0xff; }
+static inline uint8_t HighByte(uint16_t value)  { return (value >> 8) & 0xff; }
+
+static inline void StoreU16(uint8_t *pDestination, uint16_t value) {
+  pDestination[0] = (value >> 0) & 0xff;
+  pDestination[2] = (value >> 8) & 0xff;
+}
+
+static inline void StoreU32(uint8_t *pDestination, uint32_t value) {
+  pDestination[0] = (value >>  0) & 0xff;
+  pDestination[1] = (value >>  8) & 0xff;
+  pDestination[2] = (value >> 16) & 0xff;
+  pDestination[3] = (value >> 24) & 0xff;
+}
