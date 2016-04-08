@@ -33,6 +33,21 @@ bool SCAPI SteamController_TriggerHaptic(const SteamControllerDevice *pDevice, u
 void SCAPI SteamController_PlayMelody(const SteamControllerDevice *pDevice, uint32_t melodyId) {
   SteamController_HIDFeatureReport featureReport;
 
+  // 00 = Warm and Happy
+  // 01 = Invader
+  // 02 = Controller Confirmed
+  // 03 = Victory
+  // 04 = Rise and Shine
+  // 05 = Shorty
+  // 06 = Warm Boot
+  // 07 = Next Level
+  // 08 = Shake it off
+  // 09 = Access Denied
+  // 0a = Deactivate
+  // 0b = Discovery
+  // 0c = Triumph
+  // 0d = The Mann
+
   memset(&featureReport, 0, sizeof(featureReport));
   featureReport.featureId   = STEAMCONTROLLER_PLAY_MELODY;
   featureReport.dataLen     = 0x04;

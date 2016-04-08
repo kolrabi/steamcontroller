@@ -78,6 +78,20 @@ bool SteamController_Initialize(const SteamControllerDevice *pDevice) {
     // return false;
   }
 
+  /*
+    example data:
+
+    0000   83 23 00 00 00 00 00 01 02 11 00 00 02 03 00 00
+    0010   00 0a 6d 92 d2 55 04 01 8c c7 56 05 6c 4a 42 56
+    0020   09 0a 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0030   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+    0x0011 or 0x0021?: board revision (=10)
+    0x0012: uint32 = Bootloader revision (unix timestamp)
+    0x0017: uint32 = Controller firmware revision (unix timestamp)
+    0x001b: uint32 = Radio firmware revision (unix timestamp)
+  */
+
   memset(&featureReport, 0, sizeof(featureReport));
   featureReport.featureId   = STEAMCONTROLLER_CLEAR_MAPPINGS;
 
@@ -120,10 +134,14 @@ static inline void SteamController_FeatureReportAddSetting(SteamController_HIDFe
 bool SCAPI SteamController_Configure(const SteamControllerDevice *pDevice, unsigned configFlags) {
   SteamController_HIDFeatureReport featureReport;
 
+  // observed sequence when changing from desktop to steam: 
+  // 87 15 325802 180000 310200 080700 070700 300000 2e0000 0000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
   memset(&featureReport, 0, sizeof(featureReport));
   featureReport.featureId   = STEAMCONTROLLER_SET_SETTINGS;
 
-  SteamController_FeatureReportAddSetting(&featureReport, 0x03, 0x2d); // 0x2d, unknown
+  SteamController_FeatureReportAddSetting(&featureReport, 0x32, 300); // 0x012c seconds to controller shutdown
+  //SteamController_FeatureReportAddSetting(&featureReport, 0x03, 0x2d); // 0x2d, unknown
   SteamController_FeatureReportAddSetting(&featureReport, 0x05, (configFlags & STEAMCONTROLLER_CONFIG_RIGHT_PAD_HAPTIC_TOUCH)     ? 1 : 0);
   SteamController_FeatureReportAddSetting(&featureReport, 0x07, (configFlags & STEAMCONTROLLER_CONFIG_STICK_HAPTIC)               ? 0 : 7);
   SteamController_FeatureReportAddSetting(&featureReport, 0x08, (configFlags & STEAMCONTROLLER_CONFIG_RIGHT_PAD_HAPTIC_TRACKBALL) ? 0 : 7);
@@ -133,7 +151,6 @@ bool SCAPI SteamController_Configure(const SteamControllerDevice *pDevice, unsig
   SteamController_FeatureReportAddSetting(&featureReport, 0x2f, 0x01); // 0x01, unknown
   SteamController_FeatureReportAddSetting(&featureReport, 0x30, (configFlags & 31));
   SteamController_FeatureReportAddSetting(&featureReport, 0x31, (configFlags & STEAMCONTROLLER_CONFIG_SEND_BATTERY_STATUS)        ? 2 : 0);
-  SteamController_FeatureReportAddSetting(&featureReport, 0x32, 300); // 0x012c seconds to controller shutdown
 
   if (!SteamController_HIDSetFeatureReport(pDevice, &featureReport)) {
     fprintf(stderr, "SET_SETTINGS failed for controller %p\n", pDevice);
@@ -201,7 +218,7 @@ void SCAPI SteamController_SaveMelodies(const SteamControllerDevice *pDevice, ui
   featureReport.dataLen     = 0x10;
   featureReport.data[0]  = startupMelody;
   featureReport.data[1]  = shutdownMelody;
-  featureReport.data[2]  = 0xff;
+  featureReport.data[2]  = 0xff; // sometimes 0x06
   featureReport.data[3]  = 0xff;
   featureReport.data[4]  = 0x03; // 0x03 TODO: Find out what these mean. There should be a setting in Steam that changes these.
   featureReport.data[5]  = 0x09; // 0x09

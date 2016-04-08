@@ -20,7 +20,8 @@ void Debug_DumpHex(const void *pData, size_t count);
 #define STEAMCONTROLLER_CLEAR_MAPPINGS             0x81 // 1000 0001
 #define STEAMCONTROLLER_GET_ATTRIBUTES             0x83 // 1000 0011
 #define STEAMCONTROLLER_UNKNOWN_85                 0x85 // 1000 0101
-#define STEAMCONTROLLER_SET_SETTINGS               0x87 // 1000 0111
+#define STEAMCONTROLLER_SET_SETTINGS               0x87 // 1000 0111 // seems to reset config
+#define STEAMCONTROLLER_UNKNOWN_8E                 0x8E // 1000 1110
 #define STEAMCONTROLLER_TRIGGER_HAPTIC_PULSE       0x8F // 1000 1111
 #define STEAMCONTROLLER_START_BOOTLOADER           0x90 // 1001 0000
 #define STEAMCONTROLLER_SET_PRNG_ENTROPY           0x96 // 1001 0110

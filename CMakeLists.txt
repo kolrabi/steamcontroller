@@ -29,7 +29,7 @@ ELSE                    ( )
   ADD_LIBRARY           ( SteamController SHARED ${SOURCES} )
 
   SET_TARGET_PROPERTIES ( SteamController  PROPERTIES
-                          VERSION     "0.1.1"
+                          VERSION     "0.1.2"
                           SOVERSION   "0.1" )
 ENDIF                   ( )
 

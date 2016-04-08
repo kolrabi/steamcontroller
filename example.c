@@ -18,7 +18,7 @@ int main() {
 
         if (res == STEAMCONTROLLER_EVENT_CONNECTION && event.connection.details == STEAMCONTROLLER_CONNECTION_EVENT_CONNECTED) {
           fprintf(stderr, "Device %p is connected, configuring...\n", pDevice);
-          SteamController_Configure(pDevice, 0);
+          SteamController_Configure(pDevice, STEAMCONTROLLER_CONFIG_SEND_BATTERY_STATUS|STEAMCONTROLLER_CONFIG_SEND_GYRO);
         }
 
         if (res == 1) {

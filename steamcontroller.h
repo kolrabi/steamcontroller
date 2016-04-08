@@ -105,7 +105,7 @@ typedef struct {
 
 #define STEAMCONTROLLER_EVENT_UPDATE       (1)
 typedef struct {
-  uint8_t                   eventType;
+  uint32_t                  eventType;
 
   uint32_t                  timeStamp;
   uint32_t                  buttons;
@@ -126,18 +126,18 @@ typedef struct {
 #define STEAMCONTROLLER_CONNECTION_EVENT_CONNECTED           2
 #define STEAMCONTROLLER_CONNECTION_EVENT_PAIRING_REQUESTED   3
 typedef struct {
-  uint8_t                   eventType;
+  uint32_t                  eventType;
   uint8_t                   details;
 } SteamControllerConnectionEvent;
 
 #define STEAMCONTROLLER_EVENT_BATTERY      (4)
 typedef struct {
-  uint8_t                   eventType;
+  uint32_t                  eventType;
   uint16_t                  voltage;    /**< Battery voltage in millivolts */
 } SteamControllerBatteryEvent;
 
 typedef union {
-  uint8_t                         eventType;
+  uint32_t                        eventType;
   SteamControllerUpdateEvent      update;
   SteamControllerBatteryEvent     battery;
   SteamControllerConnectionEvent  connection;
@@ -184,6 +184,8 @@ bool      SCAPI SteamController_CommitPairing(const SteamControllerDevice *pDevi
 #define   STEAMCONTROLLER_DEFAULT_FLAGS                           0     /**< Only axes and button states in updates, no automatic haptic feedback. */
 #define   STEAMCONTROLLER_DEFAULT_TIMEOUT                         300   /**< Turn of after 5 minutes of inactivity. */
 #define   STEAMCONTROLLER_DEFAULT_BRIGHTNESS                      100   /**< Full home button brightness. */
+
+#define   STEAMCONTROLLER_TIMEOUT_NEVER                           0x2784  /**< Seems to be a magic value. Didn't test it, haven't got all eternity... */ 
 
 bool      SCAPI SteamController_Configure(const SteamControllerDevice *pDevice, unsigned configFlags);
 bool      SCAPI SteamController_SetHomeButtonBrightness(const SteamControllerDevice *pDevice, uint8_t brightness);
