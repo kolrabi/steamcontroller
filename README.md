@@ -22,7 +22,11 @@ Then you can add the dependency via
 steam_controller/1.0@ltjax/testing
 ```
 
-### Pitfalls
+# How to use
+
+There is a small demo program using this in the ```demo/``` folder that should be enough to get you started.
+
+# Pitfalls
 
 - You will need access to the hidraw devices. That means you will either have to change permissions on them or run as root. This dark udev magic should do the trick:
 
