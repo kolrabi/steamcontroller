@@ -4,9 +4,23 @@ This is a small C++ library for Windows, Linux and Mac OS systems that allows ac
 
 It is an adaption of the earlier https://github.com/kolrabi/steamcontroller library, with a few significant changes:
 
-- Port to C++, remove C# wrapper
+- Port to C++, restructure API, remove C# wrapper
 - Replace the backend by a minified & fixed version of https://github.com/signal11/hidapi
 - Implement non-blocking API where possible
+
+The changes were made mostly to be able to use this library in production for my game [abstractanks](https://ltjax.itch.io/abstractanks).
+
+# Install (conan)
+
+First you are going to have to my repository as a conan remote:
+```
+conan remote add ltjax https://api.bintray.com/conan/ltjax/conan 
+```
+
+Then you can add the dependency via
+```
+steam_controller/1.0@ltjax/testing
+```
 
 ### Pitfalls
 
