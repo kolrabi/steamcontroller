@@ -18,6 +18,5 @@ else()
   message(FATAL_ERROR "Unsupported platform")
 endif()
 
-#add_subdirectory(externals/hidapi)
 add_subdirectory(source)
 add_subdirectory(demo)

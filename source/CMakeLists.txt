@@ -15,6 +15,12 @@ if (steam_controller_PLATFORM STREQUAL PLATFORM_WIN32)
 
   target_link_libraries(${TARGET_NAME}
     PUBLIC Setupapi)
+
+  target_compile_definitions(${TARGET_NAME}
+    PUBLIC NOMINMAX)
+
+  target_compile_options(${TARGET_NAME}
+    PUBLIC /wd4267)
 elseif (steam_controller_PLATFORM STREQUAL PLATFORM_LINUX)
   target_sources(${TARGET_NAME}
     PRIVATE ${HIDAPI_PREFIX}/linux/hid.c)
