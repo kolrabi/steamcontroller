@@ -7,7 +7,7 @@ bool check_update(steam_controller::update_event& update)
   if (update.buttons & static_cast<int>(steam_controller::Button::A))
     return false;
 
-  std::cout << "(" << update.right_axis.x << "," << update.right_axis.y << ")" << std::endl;
+  std::cout << "buttons: 0x" << std::hex << update.buttons << std::dec << " left: (" << update.left_axis.x << "," << update.left_axis.y << ") right: (" << update.right_axis.x << "," << update.right_axis.y << ")" << std::endl;
 
   return true;
 }
@@ -16,6 +16,8 @@ void try_opening(steam_controller::context& context, steam_controller::connectio
 {
 
   auto controller = context.connect(info, 0, std::chrono::milliseconds(500));
+  if (!controller)
+      return;
 
   steam_controller::event event{};
 
