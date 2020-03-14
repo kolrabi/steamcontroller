@@ -113,12 +113,18 @@ union event {
 struct connection_info
 {
     connection_info(std::string path, bool wireless)
-    : path(path)
+    : path(std::move(path))
     , wireless(wireless)
     {
     }
+
+    explicit connection_info(std::string path)
+    : connection_info(std::move(path), true)
+    {
+    }
+
     std::string path;
-    bool wireless = true;
+    bool wireless;
 };
 
 inline bool operator==(connection_info const& lhs, connection_info const& rhs)
