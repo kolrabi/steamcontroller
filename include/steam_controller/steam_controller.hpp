@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <functional>
 
 namespace steam_controller
 {
@@ -184,3 +185,16 @@ private:
 };
 
 } // namespace steam_controller
+
+
+namespace std
+{
+template <> struct hash<steam_controller::connection_info>
+{
+    std::size_t operator()(steam_controller::connection_info const& rhs) const
+    {
+        return std::hash<std::string>()(rhs.path) * (rhs.wireless ? 17 : 31);
+    }
+};
+
+} // namespace std
