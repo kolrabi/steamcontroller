@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <functional>
 
 namespace steam_controller
 {
@@ -112,12 +113,18 @@ union event {
 struct connection_info
 {
     connection_info(std::string path, bool wireless)
-    : path(path)
+    : path(std::move(path))
     , wireless(wireless)
     {
     }
+
+    explicit connection_info(std::string path)
+    : connection_info(std::move(path), true)
+    {
+    }
+
     std::string path;
-    bool wireless = true;
+    bool wireless;
 };
 
 inline bool operator==(connection_info const& lhs, connection_info const& rhs)
@@ -184,3 +191,16 @@ private:
 };
 
 } // namespace steam_controller
+
+
+namespace std
+{
+template <> struct hash<steam_controller::connection_info>
+{
+    std::size_t operator()(steam_controller::connection_info const& rhs) const
+    {
+        return std::hash<std::string>()(rhs.path) * (rhs.wireless ? 17 : 31);
+    }
+};
+
+} // namespace std
