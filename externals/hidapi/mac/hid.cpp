@@ -512,8 +512,8 @@ static void hid_report_callback(void *context, IOReturn result, void *sender,
 	hid_device *dev = reinterpret_cast<hid_device*>(context);
 
 	/* Make a new Input Report object */
-	rpt = calloc(1, sizeof(struct input_report));
-	rpt->data = reinterpret_cast<input_report*>(calloc(1, report_length));
+	rpt = reinterpret_cast<input_report*>(calloc(1, sizeof(struct input_report)));
+	rpt->data = reinterpret_cast<uint8_t*>(calloc(1, report_length));
 	memcpy(rpt->data, report, report_length);
 	rpt->len = report_length;
 	rpt->next = NULL;
@@ -633,7 +633,7 @@ hid_device * HID_API_EXPORT hid_open_path(const char *path)
 {
 	hid_device *dev = NULL;
 	io_registry_entry_t entry = MACH_PORT_NULL;
-	IOReturn ret = NULL;
+	IOReturn ret = 0;
 
 	dev = new_hid_device();
 
