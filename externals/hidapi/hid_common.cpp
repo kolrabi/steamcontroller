@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "hidapi.h"
 
 HID_API_NAMESPACE_BEGIN
