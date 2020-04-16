@@ -29,7 +29,17 @@
 
 #include <wchar.h>
 
-#ifdef _WIN32
+#ifdef APPLE
+#include <IOKit/hid/IOHIDManager.h>
+#include <IOKit/hid/IOHIDKeys.h>
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
+#ifdef WIN32
+#include <windows.h>
+#endif
+
+#ifdef WIN32
       #define HID_API_EXPORT __declspec(dllexport)
       #define HID_API_CALL
 #else
@@ -421,16 +431,10 @@ extern "C" {
 
 
 #ifdef APPLE
-
-#include <IOKit/hid/IOHIDManager.h>
-#include <IOKit/hid/IOHIDKeys.h>
-#include <CoreFoundation/CoreFoundation.h>
-
 		int HID_API_EXPORT HID_API_CALL hid_dump_element_info(hid_device *dev);
 		IOHIDDeviceRef HID_API_EXPORT HID_API_CALL get_device_handle( hid_device *dev );
 #endif
 #ifdef WIN32
-    #include <windows.h>
         HANDLE HID_API_EXPORT HID_API_CALL get_device_handle(hid_device *dev);
 #endif
 
