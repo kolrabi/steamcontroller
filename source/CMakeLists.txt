@@ -11,7 +11,8 @@ set(HIDAPI_PREFIX ../externals/hidapi)
 
 if (steam_controller_PLATFORM STREQUAL PLATFORM_WIN32)
   target_sources(${TARGET_NAME}
-    PRIVATE ${HIDAPI_PREFIX}/windows/hid.c)
+    PRIVATE ${HIDAPI_PREFIX}/windows/hid.c
+    PRIVATE ${HIDAPI_PREFIX}/hid_common.c)
 
   target_link_libraries(${TARGET_NAME}
     PUBLIC Setupapi)
@@ -23,12 +24,14 @@ if (steam_controller_PLATFORM STREQUAL PLATFORM_WIN32)
     PUBLIC /wd4267)
 elseif (steam_controller_PLATFORM STREQUAL PLATFORM_LINUX)
   target_sources(${TARGET_NAME}
-    PRIVATE ${HIDAPI_PREFIX}/linux/hid.c)
+    PRIVATE ${HIDAPI_PREFIX}/linux/hid.c
+    PRIVATE ${HIDAPI_PREFIX}/hid_common.c)
   target_link_libraries(${TARGET_NAME}
     PRIVATE udev)
 elseif (steam_controller_PLATFORM STREQUAL PLATFORM_MACOS)
   target_sources(${TARGET_NAME}
-    PRIVATE ${HIDAPI_PREFIX}/mac/hid.c)
+    PRIVATE ${HIDAPI_PREFIX}/mac/hid.c
+    PRIVATE ${HIDAPI_PREFIX}/hid_common.c)
 
   # MAC Only
   target_link_libraries(${TARGET_NAME}
