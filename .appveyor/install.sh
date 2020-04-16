@@ -11,5 +11,4 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     pip install conan_package_tools
     conan --version
     conan user
-    conan config install conan_config/
 fi
