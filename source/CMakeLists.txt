@@ -9,9 +9,9 @@ add_library(steam_controller
 
 set(HIDAPI_PREFIX ../externals/hidapi)
 
-target_compile_definitions(${TARGET_NAME}
-  PRIVATE HID_API_NAMESPACE_BEGIN=
-  PRIVATE HID_API_NAMESPACE_END=)
+set_target_properties(${TARGET_NAME}
+  PROPERTIES COMPILE_DEFINITIONS
+  "HID_API_NAMESPACE_BEGIN=namespace steam_controller { namespace hid_api {;HID_API_NAMESPACE_END=}}")
 
 if (steam_controller_PLATFORM STREQUAL PLATFORM_WIN32)
   target_sources(${TARGET_NAME}

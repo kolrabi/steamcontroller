@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "hidapi.h"
 
+HID_API_NAMESPACE_BEGIN
+
 void HID_API_EXPORT hid_free_enumeration(struct hid_device_info* devs)
 {
 	struct hid_device_info* d = devs;
@@ -49,3 +51,5 @@ hid_device* hid_open(unsigned short vendor_id, unsigned short product_id, const 
 
 	return handle;
 }
+
+HID_API_NAMESPACE_END
