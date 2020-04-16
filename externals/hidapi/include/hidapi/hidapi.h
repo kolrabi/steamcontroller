@@ -29,7 +29,17 @@
 
 #include <wchar.h>
 
-#ifdef _WIN32
+#ifdef APPLE
+#include <IOKit/hid/IOHIDManager.h>
+#include <IOKit/hid/IOHIDKeys.h>
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
+#ifdef WIN32
+#include <windows.h>
+#endif
+
+#ifdef WIN32
       #define HID_API_EXPORT __declspec(dllexport)
       #define HID_API_CALL
 #else
@@ -39,9 +49,15 @@
 
 #define HID_API_EXPORT_CALL HID_API_EXPORT HID_API_CALL /**< API export and call macro*/
 
-#ifdef __cplusplus
-extern "C" {
+#ifndef HID_API_NAMESPACE_BEGIN
+      #error HID_API_NAMESPACE_BEGIN not defined
 #endif
+
+#ifndef HID_API_NAMESPACE_END
+      #error HID_API_NAMESPACE_END not defined
+#endif
+
+HID_API_NAMESPACE_BEGIN
 		struct hid_device_;
 		typedef struct hid_device_ hid_device; /**< opaque hidapi structure */
 		typedef void* hid_handle_t;
@@ -421,22 +437,14 @@ extern "C" {
 
 
 #ifdef APPLE
-
-#include <IOKit/hid/IOHIDManager.h>
-#include <IOKit/hid/IOHIDKeys.h>
-#include <CoreFoundation/CoreFoundation.h>
-
 		int HID_API_EXPORT HID_API_CALL hid_dump_element_info(hid_device *dev);
 		IOHIDDeviceRef HID_API_EXPORT HID_API_CALL get_device_handle( hid_device *dev );
 #endif
 #ifdef WIN32
-    #include <windows.h>
         HANDLE HID_API_EXPORT HID_API_CALL get_device_handle(hid_device *dev);
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+HID_API_NAMESPACE_END
 
 #endif
 

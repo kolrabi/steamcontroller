@@ -45,6 +45,8 @@
 
 #include "hidapi.h"
 
+HID_API_NAMESPACE_BEGIN
+
 /* Definitions from linux/hidraw.h. Since these are new, some distros
    may not have header files which contain them. */
 #ifndef HIDIOCSFEATURE
@@ -103,7 +105,7 @@ static __u32 detect_kernel_version(void)
 
 static hid_device *new_hid_device(void)
 {
-	hid_device *dev = calloc(1, sizeof(hid_device));
+	hid_device *dev = reinterpret_cast<hid_device*>(calloc(1, sizeof(hid_device)));
 	dev->device_handle = -1;
 	dev->blocking = 1;
 	dev->uses_numbered_reports = 0;
@@ -122,7 +124,7 @@ static wchar_t *utf8_to_wchar_t(const char *utf8)
 		if ((size_t) -1 == wlen) {
 			return wcsdup(L"");
 		}
-		ret = calloc(wlen+1, sizeof(wchar_t));
+		ret = reinterpret_cast<wchar_t*>(calloc(wlen+1, sizeof(wchar_t)));
 		mbstowcs(ret, utf8, wlen+1);
 		ret[wlen] = 0x0000;
 	}
@@ -461,7 +463,7 @@ struct hid_device_info  HID_API_EXPORT *hid_enumerate(unsigned short vendor_id, 
 			struct hid_device_info *tmp;
 
 			/* VID/PID match. Create the record. */
-			tmp = malloc(sizeof(struct hid_device_info));
+			tmp = reinterpret_cast<hid_device_info*>(malloc(sizeof(struct hid_device_info)));
 			if (cur_dev) {
 				cur_dev->next = tmp;
 			}
@@ -566,55 +568,6 @@ struct hid_device_info  HID_API_EXPORT *hid_enumerate(unsigned short vendor_id, 
 	udev_unref(udev);
 
 	return root;
-}
-
-void  HID_API_EXPORT hid_free_enumeration(struct hid_device_info *devs)
-{
-	struct hid_device_info *d = devs;
-	while (d) {
-		struct hid_device_info *next = d->next;
-		free(d->path);
-		free(d->serial_number);
-		free(d->manufacturer_string);
-		free(d->product_string);
-		free(d);
-		d = next;
-	}
-}
-
-hid_device * hid_open(unsigned short vendor_id, unsigned short product_id, const wchar_t *serial_number)
-{
-	struct hid_device_info *devs, *cur_dev;
-	const char *path_to_open = NULL;
-	hid_device *handle = NULL;
-
-	devs = hid_enumerate(vendor_id, product_id);
-	cur_dev = devs;
-	while (cur_dev) {
-		if (cur_dev->vendor_id == vendor_id &&
-		    cur_dev->product_id == product_id) {
-			if (serial_number) {
-				if (wcscmp(serial_number, cur_dev->serial_number) == 0) {
-					path_to_open = cur_dev->path;
-					break;
-				}
-			}
-			else {
-				path_to_open = cur_dev->path;
-				break;
-			}
-		}
-		cur_dev = cur_dev->next;
-	}
-
-	if (path_to_open) {
-		/* Open the device */
-		handle = hid_open_path(path_to_open);
-	}
-
-	hid_free_enumeration(devs);
-
-	return handle;
 }
 
 hid_device * HID_API_EXPORT hid_open_path(const char *path)
@@ -795,3 +748,5 @@ HID_API_EXPORT const wchar_t * HID_API_CALL  hid_error(hid_device *dev)
 {
 	return NULL;
 }
+
+HID_API_NAMESPACE_END

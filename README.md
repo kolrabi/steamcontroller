@@ -22,7 +22,7 @@ conan remote add ltjax https://api.bintray.com/conan/ltjax/conan
 
 Then you can add the dependency via
 ```
-steam_controller/1.0@ltjax/stable
+steam_controller/1.1@ltjax/stable
 ```
 
 # How to use

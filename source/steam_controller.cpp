@@ -33,6 +33,8 @@
 namespace
 {
 
+using hid_device = steam_controller::hid_api::hid_device;
+
 struct report_type
 {
     uint8_t reportPage;
@@ -488,7 +490,7 @@ std::unique_ptr<steam_controller::controller> try_device(std::shared_ptr<steam_c
                                                          std::uint32_t flags,
                                                          std::chrono::system_clock::duration timeout)
 {
-    auto device = hid_open_path(path);
+    auto device = steam_controller::hid_api::hid_open_path(path);
     if (device == nullptr)
         return nullptr;
 
@@ -497,7 +499,7 @@ std::unique_ptr<steam_controller::controller> try_device(std::shared_ptr<steam_c
 
 void add_list(std::vector<steam_controller::connection_info>& result, unsigned short product_id, bool wireless)
 {
-    auto list = hid_enumerate(USB_VID_VALVE, product_id);
+    auto list = steam_controller::hid_api::hid_enumerate(USB_VID_VALVE, product_id);
     try
     {
         for (auto current = list; current != nullptr; current = current->next)
@@ -507,10 +509,10 @@ void add_list(std::vector<steam_controller::connection_info>& result, unsigned s
     }
     catch (...)
     {
-        hid_free_enumeration(list);
+        steam_controller::hid_api::hid_free_enumeration(list);
         throw;
     }
-    hid_free_enumeration(list);
+    steam_controller::hid_api::hid_free_enumeration(list);
 }
 
 } // namespace
@@ -520,12 +522,12 @@ class steam_controller::api
 public:
     api()
     {
-        hid_init();
+        steam_controller::hid_api::hid_init();
     }
 
     ~api()
     {
-        hid_exit();
+        steam_controller::hid_api::hid_exit();
     }
 
     api(api const&) = delete;

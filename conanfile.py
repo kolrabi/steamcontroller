@@ -3,7 +3,7 @@ from conans import ConanFile, CMake
 
 class SteamControllerConan(ConanFile):
     name = "steam_controller"
-    version = "1.0"
+    version = "1.1"
     license = "MIT"
     author = "Marius Elvert marius.elvert@googlemail.com"
     url = "https://github.com/ltjax/steam_controller"
