@@ -1,6 +1,7 @@
 # Steam Controller Library
 
 [![Build status](https://ci.appveyor.com/api/projects/status/55ua8ogrj30uqdct?svg=true)](https://ci.appveyor.com/project/ltjax/steam-controller)
+[![Build Status](https://travis-ci.org/ltjax/steam_controller.svg?branch=master)](https://travis-ci.org/ltjax/steam_controller)
 
 This is a small C++ library for Windows, Linux and Mac OS systems that allows accessing the Steam Controller without steam. It exposes all button and axis data as well as acceleration, angular velocity and spatial orientation. 
 
