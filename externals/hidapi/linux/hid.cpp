@@ -45,6 +45,8 @@
 
 #include "hidapi.h"
 
+HID_API_NAMESPACE_BEGIN
+
 /* Definitions from linux/hidraw.h. Since these are new, some distros
    may not have header files which contain them. */
 #ifndef HIDIOCSFEATURE
@@ -746,3 +748,5 @@ HID_API_EXPORT const wchar_t * HID_API_CALL  hid_error(hid_device *dev)
 {
 	return NULL;
 }
+
+HID_API_NAMESPACE_END

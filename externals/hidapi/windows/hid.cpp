@@ -74,9 +74,7 @@ extern "C" {
 	#pragma warning(disable:4996)
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+HID_API_NAMESPACE_BEGIN
 
 #ifndef HIDAPI_USE_DDK
 	/* Since we're not building with the DDK, and the HID header
@@ -887,6 +885,4 @@ int __cdecl main(int argc, char* argv[])
 }
 #endif
 
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
+HID_API_NAMESPACE_END

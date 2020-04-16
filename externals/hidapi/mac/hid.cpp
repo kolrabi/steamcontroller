@@ -35,6 +35,8 @@
 
 #include "hidapi.h"
 
+HID_API_NAMESPACE_BEGIN
+
 /* Barrier implementation because Mac OSX doesn't have pthread_barrier.
    It also doesn't have clock_gettime(). So much for POSIX and SUSv2.
    This implementation came from Brent Priddy and was posted on
@@ -984,8 +986,7 @@ HID_API_EXPORT const wchar_t * HID_API_CALL  hid_error(hid_device *dev)
 	return NULL;
 }
 
-
-
+HID_API_NAMESPACE_END
 
 
 
