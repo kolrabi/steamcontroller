@@ -64,7 +64,7 @@ uint8_t SCAPI SteamController_ReadEvent(const SteamControllerDevice *pDevice, St
         0x0018 00 00 00 00          4 bytes   Padding?                                         
         0x001c xx xx yy yy zz zz    3 sshorts Acceleration along X,Y,Z axes.
         0x0022 xx xx yy yy zz zz    3 sshorts Angular velocity (gyro) along X,Y,Z axes.
-        0x0028 xx xx yy yy zz zz    3 sshorts Orientation vector. 
+        0x0028 ww xx xx yy yy zz zz 4 sshorts Orientation quaternion. 
       */
       pEvent->update.timeStamp          = eventData[0x04] | (eventData[0x05] << 8) | (eventData[0x06] << 16) | (eventData[0x07] << 24);
       pEvent->update.buttons            = eventData[0x08] | (eventData[0x09] << 8) | (eventData[0x0a] << 16);
@@ -86,9 +86,10 @@ uint8_t SCAPI SteamController_ReadEvent(const SteamControllerDevice *pDevice, St
       pEvent->update.angularVelocity.y  = eventData[0x24] | (eventData[0x25] << 8);
       pEvent->update.angularVelocity.z  = eventData[0x26] | (eventData[0x27] << 8);
 
-      pEvent->update.orientation.x      = eventData[0x28] | (eventData[0x29] << 8);
-      pEvent->update.orientation.y      = eventData[0x2a] | (eventData[0x2b] << 8);
-      pEvent->update.orientation.z      = eventData[0x2c] | (eventData[0x2d] << 8);
+      pEvent->update.orientation.w = eventData[0x28] | (eventData[0x29] << 8);
+      pEvent->update.orientation.x = eventData[0x2a] | (eventData[0x2b] << 8);
+      pEvent->update.orientation.y = eventData[0x2c] | (eventData[0x2d] << 8);
+      pEvent->update.orientation.z = eventData[0x2e] | (eventData[0x2f] << 8);
       break;
 
     case STEAMCONTROLLER_EVENT_BATTERY:
