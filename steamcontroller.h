@@ -26,6 +26,8 @@ typedef struct { int16_t x, y; }          SteamControllerAxisPair;
 
 /** 3 coordinates representing a vector in three dimensional space relative to the controller. */
 typedef struct { int16_t x, y, z; }       SteamControllerVector;
+/** 4 coordinates representing a (unit) quaternion in three dimensional space. */
+typedef struct { int16_t w, x, y, z; }    SteamControllerQuaternion;
 
 #define STEAMCONTROLLER_BUTTON_RT          (1<<0)        /**< Right trigger fully pressed. */
 #define STEAMCONTROLLER_BUTTON_LT          (1<<1)        /**< Left trigger fully pressed. */
@@ -71,14 +73,11 @@ typedef struct {
   SteamControllerAxisPair   stick;          /**< Stick position. */
 
   /** 
-   * Contains some kind of orientation vector? 
-   * When rotating the controller around one axis 360 degrees, the value for that
-   * axis becomes negative. One further rotation and it becomes positive againg.
-   * This is probably the imaginary parts of a unit quaternion representing the
-   * controller orientation in space.
-   * @todo Figure this out.
+   * Contains a unit orientation representing the controler's orientation in the world
+   * that is: the quaternion rotates coordinates from the controller's local coordinate frame to a globally fixed coordinate frame
+   * FYI, the controller's x-axis points to the right, y to the front and z points upwards
    */
-  SteamControllerVector     orientation;
+  SteamControllerQuaternion orientation;
 
   /**
    * Current acceleration of the controller.
@@ -116,7 +115,7 @@ typedef struct {
   SteamControllerAxisPair   leftXY;
   SteamControllerAxisPair   rightXY;
 
-  SteamControllerVector     orientation;
+  SteamControllerQuaternion orientation;
   SteamControllerVector     acceleration;
   SteamControllerVector     angularVelocity;
 } SteamControllerUpdateEvent;
